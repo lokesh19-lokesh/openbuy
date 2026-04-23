@@ -1,5 +1,5 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import React from 'react';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { useAuth } from './context/AuthContext';
 
 // Pages
@@ -89,6 +89,14 @@ import SellerOrders from './dashboards/SellerOrders';
 import SellerSettings from './dashboards/SellerSettings';
 import AdminDashboard from './dashboards/AdminDashboard';
 
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
 // Role Guard Component
 const RoleRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth();
@@ -109,6 +117,7 @@ const ProtectedRoute = ({ children }) => {
 function App() {
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <ScrollToTop />
       <div className="min-h-screen bg-gray-50 flex flex-col">
         <Navbar />
       <main className="flex-grow">
