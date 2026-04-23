@@ -2,6 +2,17 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../services/supabaseClient';
 import { MapPin } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Fix leaflet marker icon issue
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 const ProductCard = ({ product }) => (
   <Link to={`/products/${product.id}`} className="block group">
@@ -76,6 +87,36 @@ const Home = () => {
           <p className="text-lg md:text-2xl text-gray-200 font-medium max-w-2xl mx-auto">
             From local goods to global imports. Choose from thousands of verified sellers on OpenBuy.
           </p>
+        </div>
+      </div>
+
+      {/* Present Location Map Area */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-black tracking-tight flex items-center">
+            <MapPin className="mr-2" /> Your Location
+          </h2>
+        </div>
+        <div className="w-full h-64 md:h-80 bg-gray-100 rounded-2xl overflow-hidden border border-gray-200">
+          {userLocation ? (
+            <MapContainer center={[userLocation.lat, userLocation.lng]} zoom={13} scrollWheelZoom={false} style={{ height: '100%', width: '100%', zIndex: 0 }}>
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={[userLocation.lat, userLocation.lng]}>
+                <Popup>
+                  You are here!
+                </Popup>
+              </Marker>
+            </MapContainer>
+          ) : (
+            <div className="w-full h-full flex flex-col items-center justify-center text-gray-500">
+              <MapPin size={48} className="mb-4 text-gray-300" />
+              <p>Locating you...</p>
+              <p className="text-sm mt-2">Please ensure location permissions are granted.</p>
+            </div>
+          )}
         </div>
       </div>
 
