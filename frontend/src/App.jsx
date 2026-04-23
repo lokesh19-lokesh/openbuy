@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
+import React from 'react';
 import { useAuth } from './context/AuthContext';
 
 // Pages
@@ -18,17 +19,66 @@ import HelpCenter from './pages/HelpCenter';
 import Safety from './pages/Safety';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
-import { ErrorBoundary } from 'react-error-boundary';
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("Uncaught error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.FallbackComponent ? (
+        <this.props.FallbackComponent error={this.state.error} />
+      ) : (
+        <div className="p-10 text-center">
+          <h2 className="text-2xl font-bold text-red-600">Something went wrong</h2>
+          <button onClick={() => window.location.reload()} className="mt-6 bg-black text-white px-6 py-2 rounded-full">
+            Refresh Page
+          </button>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 const ErrorFallback = ({ error }) => (
-  <div className="p-10 text-center">
-    <h2 className="text-2xl font-bold text-red-600">Something went wrong</h2>
-    <pre className="mt-4 p-4 bg-gray-100 rounded text-sm overflow-auto max-w-full text-left inline-block">
-      {error.message}
-    </pre>
-    <button onClick={() => window.location.reload()} className="mt-6 block mx-auto bg-black text-white px-6 py-2 rounded-full">
-      Try Refreshing
-    </button>
+  <div className="p-10 text-center min-h-screen flex flex-col items-center justify-center bg-gray-50">
+    <div className="bg-white p-8 rounded-3xl shadow-xl max-w-md w-full border border-gray-100">
+      <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-8 h-8">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+        </svg>
+      </div>
+      <h2 className="text-2xl font-black text-gray-900 mb-2">Application Error</h2>
+      <p className="text-gray-500 mb-6 text-sm">We encountered an unexpected issue. Don't worry, your data is safe.</p>
+      
+      <div className="bg-gray-50 rounded-xl p-4 mb-6 text-left border border-gray-100">
+        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Technical Details</p>
+        <code className="text-xs text-red-500 break-all font-mono">{error?.message || "Unknown error"}</code>
+      </div>
+
+      <button 
+        onClick={() => {
+          localStorage.clear();
+          window.location.href = '/';
+        }} 
+        className="w-full bg-black text-white font-bold py-4 rounded-2xl hover:bg-gray-800 transition-all shadow-lg active:scale-[0.98]"
+      >
+        Reset & Recover
+      </button>
+      <p className="mt-4 text-[11px] text-gray-400 italic">This will clear your local session and return you home.</p>
+    </div>
   </div>
 );
 
