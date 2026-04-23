@@ -46,11 +46,11 @@ export const AuthProvider = ({ children }) => {
     return await supabase.auth.signInWithPassword({ email, password });
   };
 
-  const signup = async (email, password, name) => {
+  const signup = async (email, password, name, role = 'customer') => {
     return await supabase.auth.signUp({
       email,
       password,
-      options: { data: { name } } // stored in raw_user_meta_data
+      options: { data: { name, role } } // stored in raw_user_meta_data
     });
   };
 
