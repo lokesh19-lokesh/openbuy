@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
-import { ShoppingCart, LogOut, User } from 'lucide-react';
+import { ShoppingCart, LogOut, User, LayoutDashboard, Shield } from 'lucide-react';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -35,10 +35,16 @@ const Navbar = () => {
             {user ? (
               <div className="flex items-center space-x-1 sm:space-x-3">
                 {user.profile?.role === 'seller' && (
-                  <Link to="/seller" className={`${navItemClass} hidden sm:block`}>Dashboard</Link>
+                  <Link to="/seller" className="p-2 hover:bg-gray-100 rounded-full transition-colors group flex items-center" title="Dashboard">
+                    <LayoutDashboard size={20} className="text-gray-600 group-hover:text-black" strokeWidth={2.5} />
+                    <span className="hidden sm:inline ml-2 text-xs font-bold text-gray-600 group-hover:text-black">Dashboard</span>
+                  </Link>
                 )}
                 {user.profile?.role === 'admin' && (
-                  <Link to="/admin" className={`${navItemClass} hidden sm:block`}>Admin</Link>
+                  <Link to="/admin" className="p-2 hover:bg-gray-100 rounded-full transition-colors group flex items-center" title="Admin">
+                    <Shield size={20} className="text-gray-600 group-hover:text-black" strokeWidth={2.5} />
+                    <span className="hidden sm:inline ml-2 text-xs font-bold text-gray-600 group-hover:text-black">Admin</span>
+                  </Link>
                 )}
                 <div className="flex items-center bg-gray-100 rounded-full pl-1 pr-1 py-1 sm:pl-2 sm:pr-3 space-x-1 sm:space-x-2">
                   <div className="bg-black text-white rounded-full w-6 h-6 sm:w-7 sm:h-7 flex items-center justify-center uppercase text-xs font-bold shrink-0">
