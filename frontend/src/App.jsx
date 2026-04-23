@@ -68,6 +68,7 @@ function App() {
               <AdminDashboard />
             </RoleRoute>
           } />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
     </div>

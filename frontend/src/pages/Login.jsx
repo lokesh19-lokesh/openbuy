@@ -24,8 +24,8 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 transform transition-all animate-fade-in-up">
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center p-4 bg-white">
+      <div className="w-full max-w-md bg-white rounded-none border border-gray-200 p-8 transform transition-all animate-fade-in-up">
         <h2 className="text-3xl font-extrabold text-gray-900 mb-6 text-center">Welcome back</h2>
         {error && <div className="mb-4 bg-red-50 text-red-600 p-3 rounded-lg text-sm text-center">{error}</div>}
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -34,7 +34,7 @@ const Login = () => {
             <input
               type="email"
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow outline-none bg-gray-50 hover:bg-white"
+              className="w-full px-4 py-3 rounded-none bg-gray-100 border border-transparent focus:border-black focus:bg-white outline-none transition-colors"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@example.com"
@@ -45,7 +45,7 @@ const Login = () => {
             <input
               type="password"
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow outline-none bg-gray-50 hover:bg-white"
+              className="w-full px-4 py-3 rounded-none bg-gray-100 border border-transparent focus:border-black focus:bg-white outline-none transition-colors"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
@@ -54,13 +54,13 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-black text-white py-3 rounded-xl font-bold hover:bg-gray-900 transition-colors disabled:opacity-70 disabled:cursor-not-allowed shadow-md"
+            className="w-full bg-black text-white py-3 mt-4 rounded-none font-bold hover:bg-gray-800 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {loading ? 'Logging in...' : 'Log in'}
           </button>
         </form>
         <p className="mt-6 text-center text-sm text-gray-600">
-          Don't have an account? <Link to="/signup" className="text-blue-600 font-bold hover:underline">Sign up</Link>
+          Don't have an account? <Link to="/signup" className="text-black font-bold hover:underline">Sign up</Link>
         </p>
       </div>
     </div>

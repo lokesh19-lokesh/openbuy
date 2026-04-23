@@ -100,18 +100,18 @@ const SellerDashboard = () => {
       </div>
 
       {showAdd && (
-        <div className="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 mb-10">
+        <div className="bg-white p-8 rounded-none border-t-4 border-black shadow-sm mb-10">
           <h2 className="text-xl font-bold mb-6">List a New Product</h2>
           <form onSubmit={handleAddProduct} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <input required placeholder="Product Name" className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-blue-500" value={newProduct.name} onChange={e => setNewProduct({...newProduct, name: e.target.value})} />
-            <input required type="number" step="0.01" placeholder="Price" className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-blue-500" value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} />
-            <input placeholder="Image URL (Supabase storage link / external)" className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-blue-500" value={newProduct.image_url} onChange={e => setNewProduct({...newProduct, image_url: e.target.value})} />
-            <input placeholder="Location" className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-blue-500" value={newProduct.location} onChange={e => setNewProduct({...newProduct, location: e.target.value})} />
-            <textarea required placeholder="Description" rows="3" className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 outline-none focus:border-blue-500 md:col-span-2" value={newProduct.description} onChange={e => setNewProduct({...newProduct, description: e.target.value})} />
+            <input required placeholder="Product Name" className="w-full px-4 py-3 rounded-none border border-transparent bg-gray-100 outline-none focus:border-black focus:bg-white transition-colors" value={newProduct.name} onChange={e => setNewProduct({...newProduct, name: e.target.value})} />
+            <input required type="number" step="0.01" placeholder="Price" className="w-full px-4 py-3 rounded-none border border-transparent bg-gray-100 outline-none focus:border-black focus:bg-white transition-colors" value={newProduct.price} onChange={e => setNewProduct({...newProduct, price: e.target.value})} />
+            <input placeholder="Image URL (Supabase storage link / external)" className="w-full px-4 py-3 rounded-none border border-transparent bg-gray-100 outline-none focus:border-black focus:bg-white transition-colors" value={newProduct.image_url} onChange={e => setNewProduct({...newProduct, image_url: e.target.value})} />
+            <input placeholder="Location" className="w-full px-4 py-3 rounded-none border border-transparent bg-gray-100 outline-none focus:border-black focus:bg-white transition-colors" value={newProduct.location} onChange={e => setNewProduct({...newProduct, location: e.target.value})} />
+            <textarea required placeholder="Description" rows="3" className="w-full px-4 py-3 rounded-none border border-transparent bg-gray-100 outline-none focus:border-black focus:bg-white transition-colors md:col-span-2" value={newProduct.description} onChange={e => setNewProduct({...newProduct, description: e.target.value})} />
             
-            <div className="md:col-span-2 flex justify-end">
-              <button type="button" onClick={() => setShowAdd(false)} className="px-6 py-3 mr-4 text-gray-500 font-bold hover:text-black">Cancel</button>
-              <button type="submit" className="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold border-2 border-transparent hover:bg-blue-700 transition">Save Product</button>
+            <div className="md:col-span-2 flex justify-end mt-4">
+              <button type="button" onClick={() => setShowAdd(false)} className="px-6 py-3 mr-4 text-gray-500 font-bold hover:text-black transition-colors">Cancel</button>
+              <button type="submit" className="bg-black text-white px-8 py-3 rounded-none font-bold hover:bg-gray-800 transition">Save Product</button>
             </div>
           </form>
         </div>
@@ -120,18 +120,18 @@ const SellerDashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         {/* Products List */}
         <div>
-          <h2 className="text-xl font-bold mb-6 flex items-center border-b pb-3"><Package className="mr-2 text-blue-600"/> My Inventory ({products.length})</h2>
+          <h2 className="text-xl font-bold mb-6 flex items-center border-b border-gray-200 pb-3"><Package className="mr-2 text-black"/> My Inventory ({products.length})</h2>
           {loading ? <p>Loading...</p> : (
             <div className="space-y-4">
               {products.map(p => (
-                <div key={p.id} className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md transition">
+                <div key={p.id} className="bg-white p-4 rounded-none border border-gray-200 flex items-center justify-between hover:border-black transition-colors">
                    <div className="flex items-center">
-                     <div className="w-16 h-16 bg-gray-100 rounded-xl mr-4 overflow-hidden">
+                     <div className="w-16 h-16 bg-gray-100 mr-4 overflow-hidden">
                        {p.image_url ? <img src={p.image_url} className="w-full h-full object-cover"/> : <div className="p-2 text-xs flex items-center justify-center h-full text-center text-gray-400">No Img</div>}
                      </div>
                      <div>
-                       <h3 className="font-bold text-gray-900">{p.name}</h3>
-                       <p className="text-sm text-gray-500 font-mono">${p.price}</p>
+                       <h3 className="font-bold text-black">{p.name}</h3>
+                       <p className="text-sm text-gray-500 font-mono">${Number(p.price).toFixed(2)}</p>
                      </div>
                    </div>
                 </div>
@@ -143,21 +143,21 @@ const SellerDashboard = () => {
 
         {/* Orders List */}
         <div>
-          <h2 className="text-xl font-bold mb-6 flex items-center border-b pb-3"><ShoppingBag className="mr-2 text-green-600"/> Received Orders ({orders.length})</h2>
+          <h2 className="text-xl font-bold mb-6 flex items-center border-b border-gray-200 pb-3"><ShoppingBag className="mr-2 text-black"/> Received Orders ({orders.length})</h2>
           {loading ? <p>Loading...</p> : (
             <div className="space-y-4">
               {orders.map(o => (
-                <div key={o.id} className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
+                <div key={o.id} className="bg-white p-5 rounded-none border border-gray-200 border-l-4 border-l-black">
                   <div className="flex justify-between items-center mb-3">
-                    <span className="font-bold text-lg">#{o.orders?.id?.split('-')[0]}</span>
-                    <span className="text-xs bg-gray-100 px-3 py-1 rounded-full uppercase tracking-wider font-bold text-gray-600">{o.orders?.status}</span>
+                    <span className="font-bold text-lg text-black">#{o.orders?.id?.split('-')[0]}</span>
+                    <span className="text-xs bg-gray-100 text-black px-3 py-1 uppercase tracking-wider font-bold">{o.orders?.status}</span>
                   </div>
-                  <p className="text-sm text-gray-600 mb-4">{o.products?.name} (x{o.quantity})</p>
+                  <p className="text-sm text-gray-600 mb-4 font-medium">{o.products?.name} (x{o.quantity})</p>
                   
-                  <div className="flex items-center mt-2">
-                    <span className="text-sm font-semibold mr-3">Update Status:</span>
+                  <div className="flex items-center mt-2 border-t border-gray-100 pt-3">
+                    <span className="text-sm font-semibold mr-3 text-black">Update Status:</span>
                     <select 
-                      className="bg-gray-50 border border-gray-200 text-sm rounded-lg px-3 py-2 outline-none"
+                      className="bg-gray-100 border border-transparent text-sm px-3 py-2 outline-none focus:border-black appearance-none font-medium"
                       value={o.orders?.status}
                       onChange={(e) => handleOrderStatus(o.orders?.id, e.target.value)}
                     >

@@ -58,9 +58,9 @@ const Checkout = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10 animate-fade-in-up">
-      <h1 className="text-3xl font-extrabold mb-8 tracking-tight">Checkout</h1>
+      <h1 className="text-3xl font-extrabold mb-8 tracking-tight text-center">Checkout</h1>
       
-      <div className="bg-white rounded-3xl shadow-lg p-6 sm:p-10 border border-gray-100">
+      <div className="bg-white rounded-none border-t-4 border-black p-6 sm:p-10 shadow-sm border-l border-r border-b border-gray-200">
         <div className="mb-8">
           <h2 className="text-xl font-bold flex items-center mb-4 border-b pb-2"><Truck className="mr-2"/> Delivery Information</h2>
           <p className="text-gray-600">Logged in as: <strong className="text-black">{user.profile?.name}</strong> ({user.profile?.email})</p>
@@ -68,8 +68,8 @@ const Checkout = () => {
         </div>
         
         <div className="mb-8">
-          <h2 className="text-xl font-bold flex items-center mb-4 border-b pb-2"><CreditCard className="mr-2"/> Payment Summary</h2>
-          <div className="bg-gray-50 rounded-2xl p-6">
+          <h2 className="text-xl font-bold flex items-center mb-4 border-b border-gray-200 pb-2"><CreditCard className="mr-2"/> Payment Summary</h2>
+          <div className="bg-gray-50 rounded-none border border-gray-200 p-6">
             {items.map(i => (
               <div key={i.product_id} className="flex justify-between mb-2 text-sm text-gray-600">
                 <span>{i.name} x {i.quantity}</span>
@@ -81,7 +81,7 @@ const Checkout = () => {
               <span className="font-mono">${totalCost.toFixed(2)}</span>
             </div>
             
-            <div className="mt-4 flex items-center text-xs text-gray-500 bg-blue-50 p-3 rounded-lg border border-blue-100">
+            <div className="mt-4 flex items-center text-xs font-semibold text-black bg-gray-100 p-3 rounded-none border border-gray-200">
               Payment processing is emulated. Placing an order will immediately sync to the seller's dashboard.
             </div>
           </div>
@@ -90,7 +90,7 @@ const Checkout = () => {
         <button 
           onClick={handlePlaceOrder}
           disabled={loading}
-          className="w-full bg-black text-white font-extrabold text-xl py-4 rounded-2xl hover:bg-gray-900 transition shadow-xl hover:shadow-2xl active:scale-[0.98] disabled:opacity-50"
+          className="w-full bg-black text-white font-extrabold text-xl py-4 rounded-none hover:bg-gray-800 transition active:scale-[0.98] disabled:opacity-50"
         >
           {loading ? 'Processing...' : 'Place Order Now'}
         </button>

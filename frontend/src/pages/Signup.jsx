@@ -27,8 +27,8 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 transform transition-all animate-fade-in-up">
+    <div className="min-h-[calc(100vh-64px)] flex items-center justify-center p-4 bg-white">
+      <div className="w-full max-w-md bg-white rounded-none border border-gray-200 p-8 transform transition-all animate-fade-in-up">
         <h2 className="text-3xl font-extrabold text-gray-900 mb-6 text-center">Create account</h2>
         {error && <div className="mb-4 bg-red-50 text-red-600 p-3 rounded-lg text-sm text-center">{error}</div>}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -37,7 +37,7 @@ const Signup = () => {
             <input
               type="text"
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow outline-none bg-gray-50 hover:bg-white"
+              className="w-full px-4 py-3 rounded-none bg-gray-100 border border-transparent focus:border-black focus:bg-white outline-none transition-colors"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="John Doe"
@@ -48,7 +48,7 @@ const Signup = () => {
             <input
               type="email"
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow outline-none bg-gray-50 hover:bg-white"
+              className="w-full px-4 py-3 rounded-none bg-gray-100 border border-transparent focus:border-black focus:bg-white outline-none transition-colors"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@example.com"
@@ -59,7 +59,7 @@ const Signup = () => {
             <input
               type="password"
               required
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow outline-none bg-gray-50 hover:bg-white"
+              className="w-full px-4 py-3 rounded-none bg-gray-100 border border-transparent focus:border-black focus:bg-white outline-none transition-colors"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
@@ -69,7 +69,7 @@ const Signup = () => {
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1">I want to be a</label>
             <select
-              className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow outline-none bg-gray-50 hover:bg-white appearance-none"
+              className="w-full px-4 py-3 rounded-none bg-gray-100 border border-transparent focus:border-black focus:bg-white outline-none transition-colors appearance-none"
               value={role}
               onChange={(e) => setRole(e.target.value)}
             >
@@ -85,7 +85,7 @@ const Signup = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full mt-2 bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors disabled:opacity-70 disabled:cursor-not-allowed shadow-md"
+            className="w-full mt-2 bg-black text-white py-3 rounded-none font-bold hover:bg-gray-800 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {loading ? 'Creating account...' : 'Sign up'}
           </button>
