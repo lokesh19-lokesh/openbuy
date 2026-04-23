@@ -10,6 +10,14 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import OrderTracking from './pages/OrderTracking';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import AboutUs from './pages/AboutUs';
+import Careers from './pages/Careers';
+import Blog from './pages/Blog';
+import HelpCenter from './pages/HelpCenter';
+import Safety from './pages/Safety';
+import TermsOfService from './pages/TermsOfService';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 // Dashboards
 import SellerDashboard from './dashboards/SellerDashboard';
@@ -44,6 +52,15 @@ function App() {
           <Route path="/products/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
           
+          {/* Static Pages */}
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/careers" element={<Careers />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/help" element={<HelpCenter />} />
+          <Route path="/safety" element={<Safety />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+
           {/* Customer paths */}
           <Route path="/checkout" element={
             <ProtectedRoute>
@@ -71,6 +88,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+      <Footer />
     </div>
   );
 }
