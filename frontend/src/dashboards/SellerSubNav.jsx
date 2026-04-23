@@ -42,32 +42,48 @@ const SellerSubNav = () => {
           end
           className={({ isActive }) => `flex flex-col items-center justify-center w-full py-2 rounded-xl transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-400'}`}
         >
-          <LayoutDashboard size={22} className="mb-1" strokeWidth={isActive ? 2.5 : 2} />
-          <span className="text-[10px] font-bold uppercase tracking-wide">Dashboard</span>
+          {({ isActive }) => (
+            <>
+              <LayoutDashboard size={22} className="mb-1" strokeWidth={isActive ? 2.5 : 2} />
+              <span className="text-[10px] font-bold uppercase tracking-wide">Dashboard</span>
+            </>
+          )}
         </NavLink>
         
         <NavLink 
           to="/seller/inventory"
           className={({ isActive }) => `flex flex-col items-center justify-center w-full py-2 rounded-xl transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-400'}`}
         >
-          <Package size={22} className="mb-1" strokeWidth={isActive ? 2.5 : 2} />
-          <span className="text-[10px] font-bold uppercase tracking-wide">Inventory</span>
+          {({ isActive }) => (
+            <>
+              <Package size={22} className="mb-1" strokeWidth={isActive ? 2.5 : 2} />
+              <span className="text-[10px] font-bold uppercase tracking-wide">Inventory</span>
+            </>
+          )}
         </NavLink>
         
         <NavLink 
           to="/seller/orders"
           className={({ isActive }) => `flex flex-col items-center justify-center w-full py-2 rounded-xl transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-400'}`}
         >
-          <FileText size={22} className="mb-1" strokeWidth={isActive ? 2.5 : 2} />
-          <span className="text-[10px] font-bold uppercase tracking-wide">Orders</span>
+          {({ isActive }) => (
+            <>
+              <FileText size={22} className="mb-1" strokeWidth={isActive ? 2.5 : 2} />
+              <span className="text-[10px] font-bold uppercase tracking-wide">Orders</span>
+            </>
+          )}
         </NavLink>
         
         <NavLink 
           to="/seller/settings"
           className={({ isActive }) => `flex flex-col items-center justify-center w-full py-2 rounded-xl transition-colors ${isActive ? 'text-green-700 bg-green-50' : 'text-gray-400'}`}
         >
-          <Settings size={22} className="mb-1" strokeWidth={isActive ? 2.5 : 2} />
-          <span className="text-[10px] font-bold uppercase tracking-wide">Settings</span>
+          {({ isActive }) => (
+            <>
+              <Settings size={22} className="mb-1" strokeWidth={isActive ? 2.5 : 2} />
+              <span className="text-[10px] font-bold uppercase tracking-wide">Settings</span>
+            </>
+          )}
         </NavLink>
       </div>
     </>

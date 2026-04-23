@@ -18,6 +18,19 @@ import HelpCenter from './pages/HelpCenter';
 import Safety from './pages/Safety';
 import TermsOfService from './pages/TermsOfService';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import { ErrorBoundary } from 'react-error-boundary';
+
+const ErrorFallback = ({ error }) => (
+  <div className="p-10 text-center">
+    <h2 className="text-2xl font-bold text-red-600">Something went wrong</h2>
+    <pre className="mt-4 p-4 bg-gray-100 rounded text-sm overflow-auto max-w-full text-left inline-block">
+      {error.message}
+    </pre>
+    <button onClick={() => window.location.reload()} className="mt-6 block mx-auto bg-black text-white px-6 py-2 rounded-full">
+      Try Refreshing
+    </button>
+  </div>
+);
 
 // Dashboards
 import SellerDashboard from './dashboards/SellerDashboard';
@@ -45,8 +58,9 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navbar />
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <Navbar />
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
@@ -106,8 +120,9 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </ErrorBoundary>
   );
 }
 
