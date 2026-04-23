@@ -13,6 +13,9 @@ import Navbar from './components/Navbar';
 
 // Dashboards
 import SellerDashboard from './dashboards/SellerDashboard';
+import SellerInventory from './dashboards/SellerInventory';
+import SellerOrders from './dashboards/SellerOrders';
+import SellerSettings from './dashboards/SellerSettings';
 import AdminDashboard from './dashboards/AdminDashboard';
 
 // Role Guard Component
@@ -60,6 +63,21 @@ function App() {
           <Route path="/seller" element={
             <RoleRoute allowedRoles={['seller', 'admin']}>
               <SellerDashboard />
+            </RoleRoute>
+          } />
+          <Route path="/seller/inventory" element={
+            <RoleRoute allowedRoles={['seller', 'admin']}>
+              <SellerInventory />
+            </RoleRoute>
+          } />
+          <Route path="/seller/orders" element={
+            <RoleRoute allowedRoles={['seller', 'admin']}>
+              <SellerOrders />
+            </RoleRoute>
+          } />
+          <Route path="/seller/settings" element={
+            <RoleRoute allowedRoles={['seller', 'admin']}>
+              <SellerSettings />
             </RoleRoute>
           } />
           
