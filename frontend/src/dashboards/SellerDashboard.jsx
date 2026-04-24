@@ -53,7 +53,7 @@ const SellerDashboard = () => {
             <div className="space-y-6 flex-grow">
               <div>
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Proprietor</p>
-                <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">{user.profile?.name || 'Rajesh Kumar Sharma'}</h2>
+                <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">{'Rajesh Kumar Sharma'}</h2>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12">

@@ -225,7 +225,7 @@ const SellerInventory = () => {
                     <span className={`${stockClass} text-xs font-bold px-3 py-1.5 rounded-md`}>
                       {index % 3 === 0 ? '1,240 ' : ''}{stockText}
                     </span>
-                    <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex gap-2">
                       <button 
                         onClick={() => handleEditClick(p)} 
                         className="p-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors"
