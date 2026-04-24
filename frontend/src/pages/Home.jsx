@@ -14,21 +14,38 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
+// Smart grocery image picker based on product name
+const getGroceryPlaceholder = (productName) => {
+  const name = (productName || '').toLowerCase();
+  if (name.includes('rice') || name.includes('basmati') || name.includes('chawal')) return '/assets/rice.png';
+  if (name.includes('dal') || name.includes('lentil') || name.includes('moong') || name.includes('toor') || name.includes('chana')) return 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=400&h=400&fit=crop';
+  if (name.includes('wheat') || name.includes('atta') || name.includes('flour')) return 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&h=400&fit=crop';
+  if (name.includes('oil') || name.includes('ghee')) return 'https://images.unsplash.com/photo-1474979266404-7f28db3f3248?w=400&h=400&fit=crop';
+  if (name.includes('sugar') || name.includes('salt') || name.includes('spice') || name.includes('masala')) return 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?w=400&h=400&fit=crop';
+  if (name.includes('milk') || name.includes('dairy') || name.includes('curd') || name.includes('paneer')) return 'https://images.unsplash.com/photo-1563636619-e9143da7973b?w=400&h=400&fit=crop';
+  if (name.includes('fruit') || name.includes('apple') || name.includes('banana') || name.includes('mango')) return 'https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=400&h=400&fit=crop';
+  if (name.includes('vegeta') || name.includes('tomato') || name.includes('potato') || name.includes('onion')) return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&h=400&fit=crop';
+  if (name.includes('tea') || name.includes('chai') || name.includes('coffee')) return 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=400&h=400&fit=crop';
+  // Generic grocery fallback
+  return 'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&h=400&fit=crop';
+};
+
 const ProductCard = ({ product }) => (
   <Link to={`/products/${product.id}`} className="block group">
     <div className="bg-white rounded-none sm:rounded-lg overflow-hidden border border-gray-200 hover:border-black transition-colors duration-300 flex flex-col h-full">
       <div className="h-56 bg-gray-100 relative overflow-hidden">
-        {product.image_url ? (
-          <img src={product.image_url} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
-        ) : (
-          <img src={Math.random() > 0.5 ? "/assets/coffee.png" : "/assets/watch.png"} alt="Product Placeholder" className="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-700 ease-out" />
-        )}
+        <img 
+          src={product.image_url || getGroceryPlaceholder(product.name)} 
+          alt={product.name} 
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
+          onError={(e) => { e.target.src = getGroceryPlaceholder(product.name); }}
+        />
       </div>
       <div className="p-4 flex flex-col flex-grow">
         <div className="flex items-start justify-between mb-1">
           <h3 className="text-lg font-bold text-black line-clamp-1 mr-2">{product.name}</h3>
           <div className="bg-gray-100 rounded-full px-2 py-1 shrink-0">
-            <span className="text-sm font-bold text-black">${Number(product.price).toFixed(2)}</span>
+            <span className="text-sm font-bold text-black">₹{Number(product.price).toLocaleString()}</span>
           </div>
         </div>
         <p className="text-sm text-gray-500 mb-3 line-clamp-2">{product.description}</p>
