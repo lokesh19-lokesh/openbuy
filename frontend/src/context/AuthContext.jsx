@@ -21,39 +21,75 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const initializeAuth = async () => {
+    let mounted = true;
+
+    // Fail-safe timeout to prevent infinite loading screen
+    const timeoutId = setTimeout(() => {
+      if (mounted) {
+        console.warn("Auth initialization timed out after 5s. Forcing UI to load.");
+        setLoading(false);
+      }
+    }, 5000);
+
+    // Get initial session
+    const initSession = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error("Auth init error:", error);
+        }
+        
         let currentUser = session?.user ?? null;
-        if (currentUser) {
+        if (currentUser && mounted) {
           currentUser = await refreshUserProfile(currentUser);
         }
-        setUser(currentUser);
+        
+        if (mounted) {
+          setUser(currentUser);
+          setLoading(false);
+          clearTimeout(timeoutId);
+        }
       } catch (err) {
-        console.error("Auth initialization error:", err);
-      } finally {
-        setLoading(false);
+        console.error("Auth initialization exception:", err);
+        if (mounted) {
+          setLoading(false);
+          clearTimeout(timeoutId);
+        }
       }
     };
 
-    initializeAuth();
+    initSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      try {
-        setLoading(true);
-        let currentUser = session?.user ?? null;
-        if (currentUser) {
-          currentUser = await refreshUserProfile(currentUser);
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      // Ignore INITIAL_SESSION as we handle it with getSession() above to avoid race conditions
+      if (event === 'INITIAL_SESSION') return;
+      
+      // Run async logic detached from the auth event loop to prevent deadlocks
+      const handleAuthChange = async () => {
+        try {
+          let currentUser = session?.user ?? null;
+          if (currentUser) {
+            currentUser = await refreshUserProfile(currentUser);
+          }
+          
+          if (mounted) {
+            setUser(currentUser);
+            // Only stop loading, never start it on auth state change to avoid UI hangs
+            setLoading(false);
+          }
+        } catch (err) {
+          console.error("Auth state change exception:", err);
         }
-        setUser(currentUser);
-      } catch (err) {
-        console.error("Auth state change error:", err);
-      } finally {
-        setLoading(false);
-      }
+      };
+
+      handleAuthChange();
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const login = async (email, password) => {
@@ -74,7 +110,14 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ user, loading, login, signup, logout }}>
-      {!loading && children}
+      {loading ? (
+        <div className="min-h-screen bg-[#F8F9FA] flex flex-col items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#1A3673]"></div>
+          <p className="mt-4 text-gray-500 font-medium">Loading session...</p>
+        </div>
+      ) : (
+        children
+      )}
     </AuthContext.Provider>
   );
 };

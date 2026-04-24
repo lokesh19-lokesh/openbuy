@@ -14,13 +14,19 @@ const Login = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    const { error: signInError } = await login(email, password);
-    if (signInError) {
-      setError(signInError.message);
-    } else {
-      navigate('/');
+    try {
+      const { error: signInError } = await login(email, password);
+      if (signInError) {
+        setError(signInError.message);
+      } else {
+        navigate('/');
+      }
+    } catch (err) {
+      console.error("Login exception:", err);
+      setError("An unexpected error occurred during login.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (

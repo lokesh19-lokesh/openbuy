@@ -26,7 +26,7 @@ const SellerDashboard = () => {
       
       // Orders
       const res = await fetch(`${backendUrl}/orders/seller/${user.id}`, {
-        headers: { 'Authorization': `Bearer ${session.access_token}` }
+        headers: { 'Authorization': `Bearer ${session?.access_token}` }
       });
       if (res.ok) {
         const ords = await res.json();
