@@ -88,6 +88,10 @@ import SellerInventory from './dashboards/SellerInventory';
 import SellerOrders from './dashboards/SellerOrders';
 import SellerSettings from './dashboards/SellerSettings';
 import AdminDashboard from './dashboards/AdminDashboard';
+import BuyerSearch from './dashboards/BuyerSearch';
+import BuyerOrders from './dashboards/BuyerOrders';
+import BuyerProfile from './dashboards/BuyerProfile';
+import BuyerHome from './dashboards/BuyerHome';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -146,6 +150,28 @@ function App() {
           <Route path="/tracking/:orderId" element={
             <ProtectedRoute>
               <OrderTracking />
+            </ProtectedRoute>
+          } />
+
+          {/* Buyer Pages */}
+          <Route path="/buyer" element={
+            <ProtectedRoute>
+              <BuyerHome />
+            </ProtectedRoute>
+          } />
+          <Route path="/buyer/search" element={
+            <ProtectedRoute>
+              <BuyerSearch />
+            </ProtectedRoute>
+          } />
+          <Route path="/buyer/orders" element={
+            <ProtectedRoute>
+              <BuyerOrders />
+            </ProtectedRoute>
+          } />
+          <Route path="/buyer/profile" element={
+            <ProtectedRoute>
+              <BuyerProfile />
             </ProtectedRoute>
           } />
 

@@ -34,12 +34,21 @@ const Navbar = () => {
             
             {user ? (
               <div className="flex items-center space-x-1 sm:space-x-3">
+                {/* Buyer: Order link - only for non-seller/non-admin */}
+                {user.profile?.role !== 'seller' && user.profile?.role !== 'admin' && (
+                  <Link to="/buyer" className="p-2 hover:bg-gray-100 rounded-full transition-colors group flex items-center" title="Order">
+                    <LayoutDashboard size={20} className="text-gray-600 group-hover:text-black" strokeWidth={2.5} />
+                    <span className="hidden sm:inline ml-2 text-xs font-bold text-gray-600 group-hover:text-black">Order</span>
+                  </Link>
+                )}
+                {/* Seller: Dashboard link - only for sellers */}
                 {user.profile?.role === 'seller' && (
                   <Link to="/seller" className="p-2 hover:bg-gray-100 rounded-full transition-colors group flex items-center" title="Dashboard">
                     <LayoutDashboard size={20} className="text-gray-600 group-hover:text-black" strokeWidth={2.5} />
                     <span className="hidden sm:inline ml-2 text-xs font-bold text-gray-600 group-hover:text-black">Dashboard</span>
                   </Link>
                 )}
+                {/* Admin link */}
                 {user.profile?.role === 'admin' && (
                   <Link to="/admin" className="p-2 hover:bg-gray-100 rounded-full transition-colors group flex items-center" title="Admin">
                     <Shield size={20} className="text-gray-600 group-hover:text-black" strokeWidth={2.5} />
