@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { Trash2 } from 'lucide-react';
 
 const Cart = () => {
-  const { items, removeFromCart, totalCost, clearCart } = useCart();
+  const { items, removeFromCart, updateQuantity, totalCost, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -30,18 +30,36 @@ const Cart = () => {
                        <div className="w-full h-full flex items-center justify-center text-xs text-gray-400">No Img</div>
                      )}
                    </div>
-                   <div>
-                     <h3 className="font-bold text-gray-900 text-lg">{item.name}</h3>
-                     <p className="text-sm text-gray-500">Qty: {item.quantity} x ${Number(item.price).toFixed(2)}</p>
-                   </div>
-                </div>
-                
-                <div className="flex items-center space-x-6">
-                  <span className="font-mono font-bold text-lg">${(item.quantity * item.price).toFixed(2)}</span>
-                  <button onClick={() => removeFromCart(item.product_id)} className="text-red-400 hover:text-red-600 transition p-2 bg-red-50 hover:bg-red-100 rounded-full">
-                    <Trash2 size={18} />
-                  </button>
-                </div>
+                     <div>
+                       <h3 className="font-bold text-gray-900 text-lg">{item.name}</h3>
+                       <p className="text-sm text-gray-500">Qty: {item.quantity} x ₹{Number(item.price).toLocaleString('en-IN')}</p>
+                     </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-6">
+                    <span className="font-mono font-bold text-lg hidden sm:block">₹{(item.quantity * item.price).toLocaleString('en-IN')}</span>
+                    
+                    {/* Quantity Controls */}
+                    <div className="flex items-center bg-gray-100 rounded-xl overflow-hidden border border-gray-200">
+                      <button 
+                        onClick={() => updateQuantity(item.product_id, -1)}
+                        className="px-3 py-1 text-gray-600 hover:bg-gray-200 hover:text-black transition font-bold"
+                      >
+                        -
+                      </button>
+                      <span className="px-3 text-gray-900 font-bold text-sm w-8 text-center">{item.quantity}</span>
+                      <button 
+                        onClick={() => updateQuantity(item.product_id, 1)}
+                        className="px-3 py-1 text-gray-600 hover:bg-gray-200 hover:text-black transition font-bold"
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    <button onClick={() => removeFromCart(item.product_id)} className="text-red-400 hover:text-red-600 transition p-2 bg-red-50 hover:bg-red-100 rounded-full">
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
               </div>
             ))}
           </div>
@@ -49,7 +67,7 @@ const Cart = () => {
           <div className="mt-8 pt-8 border-t border-gray-200">
             <div className="flex justify-between items-center text-2xl font-extrabold font-mono mb-8">
               <span>Total</span>
-              <span>${totalCost.toFixed(2)}</span>
+              <span>₹{totalCost.toLocaleString('en-IN')}</span>
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4">

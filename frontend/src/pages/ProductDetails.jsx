@@ -66,7 +66,7 @@ const ProductDetails = () => {
           
           <div className="mt-auto">
             <div className="text-4xl font-mono font-bold text-gray-900 mb-6">
-              ${Number(product.price).toFixed(2)}
+              ₹{Number(product.price).toLocaleString('en-IN')}
             </div>
             
             <button 

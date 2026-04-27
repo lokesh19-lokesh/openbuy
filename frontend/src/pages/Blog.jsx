@@ -13,7 +13,7 @@ const Blog = () => (
         <div className="absolute top-6 left-6 bg-black text-white px-4 py-1 rounded-full text-xs font-bold">FEATURED</div>
       </div>
       <div>
-        <h2 className="text-4xl font-bold text-black mb-4 tracking-tighter">Announcing our $100M Series B Funding</h2>
+        <h2 className="text-4xl font-bold text-black mb-4 tracking-tighter">Announcing our ₹100M Series B Funding</h2>
         <p className="text-lg text-gray-600 mb-4">
           Today marks a significant milestone in our journey to redefine local commerce. We are excited to announce our latest funding round which will accelerate our expansion into 100 new cities...
         </p>

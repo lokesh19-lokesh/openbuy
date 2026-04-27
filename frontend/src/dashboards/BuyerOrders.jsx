@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../services/supabaseClient';
-import BuyerSubNav from './BuyerSubNav';
 import { Package, MapPin, Clock, MessageSquare, RotateCcw, HelpCircle, ChevronRight } from 'lucide-react';
 
 const BuyerOrders = () => {
@@ -68,10 +67,9 @@ const BuyerOrders = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] pb-20">
-      <BuyerSubNav />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight mb-6">Orders</h1>
+        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight mb-6"> My Orders</h1>
 
         {/* Tabs */}
         <div className="flex bg-gray-100 rounded-xl p-1 mb-8 max-w-md">

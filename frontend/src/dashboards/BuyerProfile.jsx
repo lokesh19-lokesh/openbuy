@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import BuyerSubNav from './BuyerSubNav';
 import { 
   User, Mail, CreditCard, MapPin, Bell, Shield, HelpCircle, 
   LogOut, ChevronRight, Home, Briefcase, Gift, Wallet, Plus
@@ -19,7 +18,6 @@ const BuyerProfile = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] pb-20">
-      <BuyerSubNav />
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Profile Header Card */}

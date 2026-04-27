@@ -1,18 +1,83 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 import { supabase } from '../services/supabaseClient';
-import BuyerSubNav from './BuyerSubNav';
 import { Search, SlidersHorizontal, MapPin, Star, Truck, Package, MessageSquare, Clock, Zap, Award, ShieldCheck } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, Popup, useMap, ZoomControl } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+const MapUpdater = ({ center }) => {
+  const map = useMap();
+  useEffect(() => {
+    map.setView(center, 12);
+  }, [center, map]);
+  return null;
+};
 
 const BuyerSearch = () => {
   const { user } = useAuth();
+  const { items, addToCart, updateQuantity } = useCart();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [activeFilter, setActiveFilter] = useState('All');
+
+  const [userLocation, setUserLocation] = useState([17.3850, 78.4867]);
+  const [locationName, setLocationName] = useState('Fetching location...');
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          setUserLocation([lat, lon]);
+          
+          try {
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+            const data = await res.json();
+            const name = data.address?.suburb || data.address?.neighborhood || data.address?.city || 'Your Location';
+            const city = data.address?.city || data.address?.state || '';
+            setLocationName(`${name}${city && name !== city ? `, ${city}` : ''}`);
+          } catch (e) {
+            setLocationName('Your Location');
+          }
+        },
+        (error) => {
+          console.log("Geolocation error", error);
+          setLocationName('Hyderabad (Center)');
+        }
+      );
+    } else {
+      setLocationName('Hyderabad (Center)');
+    }
+  }, []);
+
+  const userIcon = L.divIcon({
+    className: 'bg-transparent',
+    html: `<div class="w-4 h-4 bg-blue-500 border-2 border-white rounded-full shadow-[0_2px_4px_rgba(0,0,0,0.3)]"></div>`,
+    iconSize: [16, 16],
+    iconAnchor: [8, 8]
+  });
+
+  const supplierIcon = L.divIcon({
+    className: 'bg-transparent',
+    html: `<div class="w-4 h-4 bg-[#E8530E] border-2 border-white rounded-full shadow-[0_2px_4px_rgba(0,0,0,0.3)]"></div>`,
+    iconSize: [16, 16],
+    iconAnchor: [8, 8]
+  });
+
+  const getSupplierLocation = (baseLat, baseLng, index) => {
+    const seed1 = Math.sin(index * 12.9898 + 1) * 43758.5453;
+    const seed2 = Math.cos(index * 78.233 + 1) * 43758.5453;
+    const latOffset = ((seed1 - Math.floor(seed1)) - 0.5) * 0.08;
+    const lngOffset = ((seed2 - Math.floor(seed2)) - 0.5) * 0.08;
+    return [baseLat + latOffset, baseLng + lngOffset];
+  };
 
   const filters = ['All', 'Same Day', 'Under ₹500', 'Verified'];
 
@@ -38,15 +103,23 @@ const BuyerSearch = () => {
         data = supaData || [];
       }
 
-      // Client-side filter if there's a search query
+      // Client-side NLP parsing and filtering if there's a search query
       if (query && query.trim()) {
         const q = query.toLowerCase().trim();
         let itemQuery = q;
         let locationQuery = '';
+        let priceLimit = null;
+
+        // Extract price limits (e.g. under 2000rs, < 500)
+        const priceMatch = itemQuery.match(/(?:under|below|<)\s*(\d+)(?:\s*(?:rs|rupees|₹))?/i);
+        if (priceMatch) {
+          priceLimit = parseInt(priceMatch[1], 10);
+          itemQuery = itemQuery.replace(priceMatch[0], '').trim();
+        }
 
         // Check for location patterns
-        const nearMatch = q.match(/^(.*?)\s+near\s+(.*)$/);
-        const inMatch = q.match(/^(.*?)\s+(?:in|at)\s+(.*)$/);
+        const nearMatch = itemQuery.match(/^(.*?)\s+near\s+(.*)$/);
+        const inMatch = itemQuery.match(/^(.*?)\s+(?:in|at)\s+(.*)$/);
 
         if (nearMatch) {
           itemQuery = nearMatch[1].trim();
@@ -55,6 +128,11 @@ const BuyerSearch = () => {
           itemQuery = inMatch[1].trim();
           locationQuery = inMatch[2].trim();
         }
+
+        // Synonym / Noise Reduction (e.g., rice bags -> rice)
+        const noiseWords = ['bags', 'bag', 'packets', 'packet', 'boxes', 'box', 'kg', 'liters', 'grams'];
+        const words = itemQuery.split(/\s+/).filter(w => !noiseWords.includes(w));
+        itemQuery = words.join(' ').trim();
 
         data = data.filter(p => {
           const productLoc = (p.location || 'Hyderabad').toLowerCase();
@@ -65,7 +143,7 @@ const BuyerSearch = () => {
                         (p.description && p.description.toLowerCase().includes(itemQuery)) ||
                         (p.category && p.category.toLowerCase().includes(itemQuery));
           } else {
-            itemMatch = true; // Match all if item query is empty (e.g. just "near me")
+            itemMatch = true; // Match all if item query is empty
           }
 
           let locationMatch = true;
@@ -76,8 +154,25 @@ const BuyerSearch = () => {
             itemMatch = itemMatch || productLoc.includes(itemQuery);
           }
 
-          return itemMatch && locationMatch;
+          let priceMatch = true;
+          if (priceLimit !== null) {
+            priceMatch = Number(p.price) <= priceLimit;
+          }
+
+          return itemMatch && locationMatch && priceMatch;
         });
+      }
+
+      // Calculate consistent distance for map plotting and sorting
+      data = data.map((p, i) => {
+        const seed = String(p.id || p.name).split('').reduce((acc, char) => acc + char.charCodeAt(0), i);
+        const computedDistance = 1 + (Math.abs(Math.sin(seed)) * 8); 
+        return { ...p, computedDistance: parseFloat(computedDistance.toFixed(1)) };
+      });
+
+      // Sort by distance if a location query like "near me" or "in" was used
+      if (query && (query.toLowerCase().includes('near') || query.toLowerCase().includes('in') || query.toLowerCase().includes('at'))) {
+        data.sort((a, b) => a.computedDistance - b.computedDistance);
       }
 
       // Apply filter pills
@@ -120,7 +215,7 @@ const BuyerSearch = () => {
       rating: ratings[index % ratings.length],
       deliveryTime: deliveryTimes[index % deliveryTimes.length],
       stock: stocks[index % stocks.length],
-      distance: `${(1 + Math.random() * 4).toFixed(1)}km`,
+      distance: `${product.computedDistance || (1 + Math.random() * 4).toFixed(1)}km`,
       location: product.location || 'Hyderabad'
     };
   };
@@ -129,7 +224,6 @@ const BuyerSearch = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] pb-20">
-      <BuyerSubNav />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Search Header */}
@@ -183,7 +277,7 @@ const BuyerSearch = () => {
               <Zap className="text-[#E8530E]" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-extrabold text-gray-900">{products.length}</p>
+              <p className="text-2xl font-extrabold text-gray-900">{searchParams.get('q') ? products.length : 0}</p>
               <p className="text-xs text-gray-500 font-semibold">Suppliers Found</p>
             </div>
           </div>
@@ -192,7 +286,7 @@ const BuyerSearch = () => {
               <Truck className="text-blue-600" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-extrabold text-gray-900">{Math.ceil(products.length * 0.6)}</p>
+              <p className="text-2xl font-extrabold text-gray-900">{searchParams.get('q') ? Math.ceil(products.length * 0.6) : 0}</p>
               <p className="text-xs text-gray-500 font-semibold">Same Day Delivery</p>
             </div>
           </div>
@@ -201,7 +295,7 @@ const BuyerSearch = () => {
               <Package className="text-green-600" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-extrabold text-gray-900">₹{lowestPrice.toLocaleString()}</p>
+              <p className="text-2xl font-extrabold text-gray-900">₹{searchParams.get('q') && products.length > 0 ? lowestPrice.toLocaleString() : 0}</p>
               <p className="text-xs text-gray-500 font-semibold">Lowest Price Found</p>
             </div>
           </div>
@@ -210,8 +304,48 @@ const BuyerSearch = () => {
               <Star className="text-yellow-600" size={20} />
             </div>
             <div>
-              <p className="text-2xl font-extrabold text-gray-900">4.8★</p>
+              <p className="text-2xl font-extrabold text-gray-900">{searchParams.get('q') && products.length > 0 ? '4.8★' : '0★'}</p>
               <p className="text-xs text-gray-500 font-semibold">Top Rated Supplier</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Live Map View */}
+        <div className="relative w-full h-48 sm:h-64 bg-[#FCFBF9] rounded-2xl border border-gray-200 mb-8 overflow-hidden shadow-inner">
+          <MapContainer center={userLocation} zoom={12} className="w-full h-full z-0" scrollWheelZoom={false} zoomControl={false}>
+            <ZoomControl position="bottomleft" />
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+              url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+            />
+            <MapUpdater center={userLocation} />
+            
+            <Marker position={userLocation} icon={userIcon}>
+              <Popup>You are here</Popup>
+            </Marker>
+
+            {searchParams.get('q') && products.map((p, i) => (
+              <Marker key={`supplier-${p.id || i}`} position={getSupplierLocation(userLocation[0], userLocation[1], i)} icon={supplierIcon}>
+                <Popup>{getSupplierData(p, i).supplierName}</Popup>
+              </Marker>
+            ))}
+          </MapContainer>
+
+          {/* Location Badge (Top Left) */}
+          <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-1.5 z-[1000] pointer-events-auto">
+            <MapPin size={14} className="text-pink-500" fill="currentColor" />
+            <span className="text-xs font-bold text-gray-800 tracking-tight">{locationName}</span>
+          </div>
+
+          {/* Legend (Bottom Right) */}
+          <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-xl shadow-sm border border-gray-100 flex items-center gap-3 z-[1000] pointer-events-auto">
+            <div className="flex items-center gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-sm"></div>
+              <span className="text-[10px] font-bold text-gray-600">You</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#E8530E] shadow-sm"></div>
+              <span className="text-[10px] font-bold text-gray-600">Supplier</span>
             </div>
           </div>
         </div>
@@ -280,14 +414,43 @@ const BuyerSearch = () => {
                     <div className="flex items-center gap-3">
                       <div>
                         <p className="text-[10px] text-gray-400 font-bold uppercase">Best Price</p>
-                        <p className="text-xl font-extrabold text-gray-900">₹{Number(product.price).toLocaleString()}</p>
+                        <p className="text-xl font-extrabold text-gray-900">₹{Number(product.price).toLocaleString('en-IN')}</p>
                       </div>
-                      <button className="p-2.5 border border-gray-200 rounded-xl hover:bg-gray-50 transition">
+                      <button className="p-2.5 border border-gray-200 rounded-xl hover:bg-gray-50 transition hidden sm:block">
                         <MessageSquare size={18} className="text-gray-500" />
                       </button>
-                      <button className="bg-[#E8530E] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-orange-700 transition-colors shadow-sm">
-                        Order Now
-                      </button>
+                      
+                      {(() => {
+                        const cartItem = items.find(i => i.product_id === product.id);
+                        if (cartItem) {
+                          return (
+                            <div className="flex items-center bg-[#E8530E] rounded-xl overflow-hidden shadow-sm h-[42px]">
+                              <button 
+                                onClick={() => updateQuantity(product.id, -1)}
+                                className="px-4 h-full text-white hover:bg-orange-700 transition font-bold"
+                              >
+                                -
+                              </button>
+                              <span className="px-2 text-white font-extrabold text-sm w-6 text-center">{cartItem.quantity}</span>
+                              <button 
+                                onClick={() => updateQuantity(product.id, 1)}
+                                className="px-4 h-full text-white hover:bg-orange-700 transition font-bold"
+                              >
+                                +
+                              </button>
+                            </div>
+                          );
+                        }
+                        
+                        return (
+                          <button 
+                            onClick={() => addToCart(product)}
+                            className="bg-[#E8530E] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-orange-700 transition-colors shadow-sm h-[42px]"
+                          >
+                            Order Now
+                          </button>
+                        );
+                      })()}
                     </div>
                   </div>
                 </div>

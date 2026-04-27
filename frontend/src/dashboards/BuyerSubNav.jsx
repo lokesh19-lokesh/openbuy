@@ -24,7 +24,7 @@ const BuyerSubNav = () => {
             to="/buyer/orders"
             className={({ isActive }) => `text-lg font-medium transition-colors ${isActive ? 'text-white' : 'text-gray-400 hover:text-white'}`}
           >
-            Orders
+            My Orders
           </NavLink>
           <NavLink 
             to="/buyer/profile"
@@ -69,7 +69,7 @@ const BuyerSubNav = () => {
           {({ isActive }) => (
             <>
               <FileText size={22} className="mb-1" strokeWidth={isActive ? 2.5 : 2} />
-              <span className="text-[10px] font-bold uppercase tracking-wide">Orders</span>
+              <span className="text-[10px] font-bold uppercase tracking-wide">My Orders</span>
             </>
           )}
         </NavLink>

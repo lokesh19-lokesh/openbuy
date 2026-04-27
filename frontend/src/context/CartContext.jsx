@@ -37,12 +37,24 @@ export const CartProvider = ({ children }) => {
     setItems((prev) => prev.filter((item) => item.product_id !== productId));
   };
 
+  const updateQuantity = (productId, delta) => {
+    setItems((prev) => {
+      return prev.map(item => {
+        if (item.product_id === productId) {
+          const newQty = item.quantity + delta;
+          return newQty > 0 ? { ...item, quantity: newQty } : null;
+        }
+        return item;
+      }).filter(Boolean); // Remove nulls (when qty becomes 0)
+    });
+  };
+
   const clearCart = () => setItems([]);
 
   const totalCost = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ items, addToCart, removeFromCart, clearCart, totalCost }}>
+    <CartContext.Provider value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, totalCost }}>
       {children}
     </CartContext.Provider>
   );

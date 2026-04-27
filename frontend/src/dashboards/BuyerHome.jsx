@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../services/supabaseClient';
-import BuyerSubNav from './BuyerSubNav';
 import { Search, SlidersHorizontal, MapPin, Clock, Plus, Home, Leaf, ShoppingBag, Truck } from 'lucide-react';
 
 // Smart grocery image picker based on product name
@@ -64,7 +63,6 @@ const BuyerHome = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] pb-20">
-      <BuyerSubNav />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}

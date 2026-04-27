@@ -73,12 +73,12 @@ const Checkout = () => {
             {items.map(i => (
               <div key={i.product_id} className="flex justify-between mb-2 text-sm text-gray-600">
                 <span>{i.name} x {i.quantity}</span>
-                <span className="font-mono">${(i.price * i.quantity).toFixed(2)}</span>
+                <span className="font-mono">₹{(i.price * i.quantity).toLocaleString('en-IN')}</span>
               </div>
             ))}
             <div className="border-t border-gray-200 mt-4 pt-4 flex justify-between font-bold text-lg text-gray-900">
               <span>Total to Pay</span>
-              <span className="font-mono">${totalCost.toFixed(2)}</span>
+              <span className="font-mono">₹{totalCost.toLocaleString('en-IN')}</span>
             </div>
             
             <div className="mt-4 flex items-center text-xs font-semibold text-black bg-gray-100 p-3 rounded-none border border-gray-200">
