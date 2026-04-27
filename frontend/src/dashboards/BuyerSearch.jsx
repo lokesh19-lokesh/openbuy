@@ -311,7 +311,7 @@ const BuyerSearch = () => {
         </div>
 
         {/* Live Map View */}
-        <div className="relative w-full h-48 sm:h-64 bg-[#FCFBF9] rounded-2xl border border-gray-200 mb-8 overflow-hidden shadow-inner">
+        <div className="relative z-0 w-full h-48 sm:h-64 bg-[#FCFBF9] rounded-2xl border border-gray-200 mb-8 overflow-hidden shadow-inner">
           <MapContainer center={userLocation} zoom={12} className="w-full h-full z-0" scrollWheelZoom={false} zoomControl={false}>
             <ZoomControl position="bottomleft" />
             <TileLayer
@@ -424,17 +424,17 @@ const BuyerSearch = () => {
                         const cartItem = items.find(i => i.product_id === product.id);
                         if (cartItem) {
                           return (
-                            <div className="flex items-center bg-[#E8530E] rounded-xl overflow-hidden shadow-sm h-[42px]">
+                            <div className="flex items-center bg-[#E8530E] rounded-xl overflow-hidden shadow-sm h-[42px] shrink-0">
                               <button 
                                 onClick={() => updateQuantity(product.id, -1)}
-                                className="px-4 h-full text-white hover:bg-orange-700 transition font-bold"
+                                className="px-3 sm:px-4 h-full text-white hover:bg-orange-700 transition font-bold"
                               >
                                 -
                               </button>
-                              <span className="px-2 text-white font-extrabold text-sm w-6 text-center">{cartItem.quantity}</span>
+                              <span className="px-1 sm:px-2 text-white font-extrabold text-sm w-6 text-center">{cartItem.quantity}</span>
                               <button 
                                 onClick={() => updateQuantity(product.id, 1)}
-                                className="px-4 h-full text-white hover:bg-orange-700 transition font-bold"
+                                className="px-3 sm:px-4 h-full text-white hover:bg-orange-700 transition font-bold"
                               >
                                 +
                               </button>
@@ -445,7 +445,7 @@ const BuyerSearch = () => {
                         return (
                           <button 
                             onClick={() => addToCart(product)}
-                            className="bg-[#E8530E] text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-orange-700 transition-colors shadow-sm h-[42px]"
+                            className="bg-[#E8530E] text-white px-3 sm:px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-orange-700 transition-colors shadow-sm h-[42px] shrink-0 whitespace-nowrap"
                           >
                             Order Now
                           </button>
