@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../services/supabaseClient';
 import { Link } from 'react-router-dom';
-import SellerSubNav from './SellerSubNav';
 import { 
   Package, ShoppingBag, Plus, Store, Fingerprint, 
   Mail, Phone, MessageSquare, TrendingUp, Filter 
@@ -44,7 +43,6 @@ const SellerDashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] pb-20">
-      <SellerSubNav />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up">
         {/* Proprietor Information Card */}

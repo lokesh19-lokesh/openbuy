@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../services/supabaseClient';
-import SellerSubNav from './SellerSubNav';
 import { Plus, Search, Filter, Package, Edit, Trash2 } from 'lucide-react';
 
 const SellerInventory = () => {
@@ -112,7 +111,6 @@ const SellerInventory = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] pb-20">
-      <SellerSubNav />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up">
         {/* Header Section */}

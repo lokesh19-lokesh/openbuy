@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../services/supabaseClient';
-import SellerSubNav from './SellerSubNav';
 import { Filter, Download, MoreVertical } from 'lucide-react';
 
 const SellerOrders = () => {
@@ -38,7 +37,6 @@ const SellerOrders = () => {
 
   return (
     <div className="min-h-screen bg-[#F8F9FA] pb-20">
-      <SellerSubNav />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-in-up">
         <div className="mb-8">

@@ -86,7 +86,7 @@ const ErrorFallback = ({ error }) => (
 import SellerDashboard from './dashboards/SellerDashboard';
 import SellerInventory from './dashboards/SellerInventory';
 import SellerOrders from './dashboards/SellerOrders';
-import SellerSettings from './dashboards/SellerSettings';
+import SellerProfile from './dashboards/SellerProfile';
 import AdminDashboard from './dashboards/AdminDashboard';
 import BuyerSearch from './dashboards/BuyerSearch';
 import BuyerOrders from './dashboards/BuyerOrders';
@@ -191,9 +191,9 @@ function App() {
               <SellerOrders />
             </RoleRoute>
           } />
-          <Route path="/seller/settings" element={
+          <Route path="/seller/profile" element={
             <RoleRoute allowedRoles={['seller', 'admin']}>
-              <SellerSettings />
+              <SellerProfile />
             </RoleRoute>
           } />
           
