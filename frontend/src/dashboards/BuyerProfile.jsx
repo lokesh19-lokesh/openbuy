@@ -17,7 +17,7 @@ const BuyerProfile = () => {
   const initials = profileName.charAt(0).toUpperCase();
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] pb-20">
+    <div className="min-h-screen bg-[#F8F9FA] pb-20 pt-6">
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Profile Header Card */}

@@ -66,7 +66,7 @@ const BuyerOrders = () => {
   const displayOrders = orders.length > 0 ? orders : (activeTab === 'active' ? demoActiveOrders : demoPastOrders);
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] pb-20">
+    <div className="min-h-screen bg-[#F8F9FA] pb-20 pt-6">
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight mb-6"> My Orders</h1>
