@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { supabase } from '../services/supabaseClient';
-import { Search, SlidersHorizontal, MapPin, Star, Truck, Package, MessageSquare, Clock, Zap, Award, ShieldCheck } from 'lucide-react';
+import { Search, SlidersHorizontal, MapPin, Star, Truck, Package, MessageSquare, Clock, Zap, Award, ShieldCheck, X } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, useMap, ZoomControl } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -237,10 +237,22 @@ const BuyerSearch = () => {
               <input 
                 type="text" 
                 placeholder="Search products, suppliers..." 
-                className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-100 focus:border-[#E8530E] transition-all font-medium text-gray-700"
+                className="w-full pl-11 pr-10 py-3.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-orange-100 focus:border-[#E8530E] transition-all font-medium text-gray-700"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setSearchParams({});
+                  }}
+                  className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <X size={18} />
+                </button>
+              )}
             </div>
             <button type="submit" className="bg-[#E8530E] text-white p-3.5 rounded-xl flex items-center hover:bg-orange-700 transition shadow-sm">
               <Search size={20} />
